@@ -247,7 +247,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 .chapter-title td.k{font-family:var(--font-chord);font-weight:700;font-size:15px;white-space:nowrap}
 .notes-title{display:none}
 /* text lists for horn and bass parts */
-.lean{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:20px 28px}
+.lean{margin-top:22px;display:grid;grid-template-columns:1fr;gap:20px 28px}
 .lean h3{font-size:12px;text-transform:uppercase;letter-spacing:.14em;font-weight:600;color:var(--muted);margin-bottom:8px}
 .lean h3 span{text-transform:none;letter-spacing:0;font-weight:400}
 .lean ul{margin:0;padding:0;list-style:none;display:grid;gap:5px;font-size:13.5px}
@@ -287,6 +287,38 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 @media (max-width:720px){.lean.big ul.two{grid-template-columns:1fr}.stand .kn .it .ch{font-size:24px}.stand .kn .it b{font-size:16px}.lean.big li .nn{font-size:18px}}
 @media (max-width:720px){.yt{grid-template-columns:1fr}.yt .ytb,.yt iframe{width:100%;height:auto;aspect-ratio:16/9}}
 @media print{.yt{display:none}}
+/* contents grid */
+.toc-parts{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.toc-parts b{color:var(--ink);font-weight:600}
+.toc td.p{text-align:center;white-space:nowrap}
+.toc td.p a{text-decoration:none;font-family:var(--font-chord);font-weight:700;font-size:14px;color:var(--ink)}
+.toc td.p a:hover{color:var(--brass)}
+.toc .pg,.toc-note .pg{display:none}
+.toc-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+@media print{.toc .scr,.toc-note .scr{display:none}.toc .pg,.toc-note .pg{display:inline}.toc td.p a{font-family:var(--font-body);font-weight:500;font-size:11.5px;color:var(--ink)}}
+/* side menu + back to top (screen only) */
+.menubtn{position:fixed;left:14px;top:12px;z-index:30;font:600 13px/1 var(--font-body);padding:9px 12px;border:1.4px solid var(--rule);background:var(--chart-bg);color:var(--ink);border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.sidemenu{position:fixed;left:0;top:0;bottom:0;width:min(320px,88vw);z-index:40;background:var(--chart-bg);border-right:1px solid var(--rule);transform:translateX(-102%);transition:transform .2s ease;display:flex;flex-direction:column;box-shadow:0 0 24px rgba(0,0,0,.12)}
+.sidemenu.open{transform:none}
+.sm-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--rule);font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:14px}
+.sm-close{font:400 22px/1 var(--font-body);border:0;background:none;color:var(--ink-2);cursor:pointer;padding:0 4px}
+.sm-nav{overflow:auto;padding:12px 16px 24px;display:grid;gap:12px;align-content:start}
+.sm-sec{display:grid;gap:6px;font-size:13.5px}
+.sm-sec a{color:var(--ink-2);text-decoration:none}
+.sm-sec a:hover{color:var(--ink)}
+.sm-label{margin-top:4px}
+.sm-parts{display:flex;flex-wrap:wrap;gap:5px}
+.sm-parts button{font:600 12px/1 var(--font-body);padding:7px 10px;border:1.4px solid var(--rule);background:var(--paper);color:var(--ink-2);border-radius:999px;cursor:pointer}
+.sm-parts button.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.sm-tunes{margin:4px 0 0;padding:0 0 0 1.8em;display:grid;gap:4px;font-size:13.5px}
+.sm-tunes li::marker{color:var(--muted);font-variant-numeric:tabular-nums}
+.sm-tunes a{color:var(--ink);text-decoration:none}
+.sm-tunes a:hover{color:var(--brass)}
+.sm-tunes .k{color:var(--muted);font-family:var(--font-chord);font-weight:700;font-size:12px;margin-left:6px}
+.totop{position:fixed;right:16px;bottom:18px;z-index:30;font:600 13px/1 var(--font-body);padding:11px 14px;border:1.4px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:999px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.totop.show{opacity:1;pointer-events:auto}
+.mast{padding-top:64px}
+@media print{.menubtn,.sidemenu,.totop{display:none !important}.mast{padding-top:6px}}
 /* stand-readable block at the top of the notes page */
 .stand{margin-top:10px;padding:14px 16px 16px;background:var(--chart-bg);border:1px solid var(--rule);display:grid;gap:18px}
 .stand .kn{margin-top:0}
@@ -318,6 +350,17 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 
+<button type="button" class="menubtn" id="menubtn" aria-label="Open the contents menu" aria-expanded="false">☰ <span>Menu</span></button>
+<aside class="sidemenu" id="sidemenu" aria-label="Contents menu">
+  <div class="sm-head"><span>Contents</span><button type="button" class="sm-close" id="sm-close" aria-label="Close">×</button></div>
+  <nav class="sm-nav">
+    <div class="sm-sec"><a href="#contents">Contents</a><a href="#basics-h">Bandstand basics</a><a href="#pent-h">Pentatonics</a><a href="#glossary">Glossary</a><a href="#nochart-h">Still needed</a><a href="#appx">Appendix</a></div>
+    <div class="sm-label eyebrow">Part</div>
+    <div class="sm-parts" id="sm-parts"></div>
+    <ol class="sm-tunes" id="sm-tunes"></ol>
+  </nav>
+</aside>
+<button type="button" class="totop" id="totop" aria-label="Back to top">↑ Top</button>
 </head>
 <body>
 <div class="wrap">
@@ -330,18 +373,20 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
       <span><b>Brackets</b> small chords in brackets are common options and turnarounds</span>
       <span><b>Solo map</b> what to lean on, per section</span>
       <span><a href="#glossary" style="color:var(--ink-2)">Glossary of symbols and terms</a></span>
-      <span><a href="https://shkenderov.github.io/Stefan-s-AI-jazz-book/Stefans-AABA-Fake-Book.pdf" target="_blank" rel="noopener" style="color:var(--ink);font-weight:600">⬇ Download the PDF · all seven parts, 495 pages</a></span>
+      <span><a href="https://shkenderov.github.io/Stefan-s-AI-jazz-book/Stefans-AABA-Fake-Book.pdf" target="_blank" rel="noopener" style="color:var(--ink);font-weight:600">⬇ Download the PDF · all seven parts, 506 pages</a></span>
     </div>
   </header>
 
-  <section class="setlist" aria-labelledby="setlist-h">
-    <h2 id="setlist-h">Set list <span class="eyebrow" style="display:inline;margin-left:.6em">alphabetical</span></h2>
+  <section class="setlist" id="contents" aria-labelledby="setlist-h">
+    <h2 id="setlist-h">Contents <span class="eyebrow" style="display:inline;margin-left:.6em">32 tunes, alphabetical · 7 parts</span></h2>
+    <div class="toc-parts" id="toc-parts"></div>
     <div class="tbl">
-      <table>
-        <thead><tr><th>#</th><th>Tune</th><th>Key</th><th>Form</th><th>Feel · dance tempo</th><th>From your lists</th></tr></thead>
+      <table class="toc">
+        <thead><tr><th>#</th><th>Tune</th><th>Key</th><th>Form</th><th>Piano</th><th>Trumpet</th><th>Alto</th><th>Tenor</th><th>Guitar</th><th>Bass</th><th>Drums</th></tr></thead>
         <tbody id="setlist-body"></tbody>
       </table>
     </div>
+    <p class="toc-note"><span class="scr">Each cell is a link; horn columns show the written key.</span><span class="pg">Numbers are page numbers; horn parts are transposed, the written key is on each part's title page.</span></p>
   </section>
 
   <section class="basics" aria-labelledby="basics-h">
@@ -573,7 +618,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
     </div>
   </section>
 
-  <section class="appx">
+  <section class="appx" id="appx">
     <div>
       <h2>On your lists, but not AABA</h2>
       <ul>
@@ -1985,7 +2030,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
   (function(){
     const nav=document.getElementById("chapnav"); if(!nav||!nav.addEventListener) return;
     nav.innerHTML='<span class="eyebrow lbl">Part</span>'+PARTS.map(p=>'<button type="button" data-part="'+p.id+'">'+esc(p.name)+'</button>').join("");
-    function show(id,scroll){
+    let show=function(id,scroll){
       document.querySelectorAll(".chapter").forEach(c=>c.classList.toggle("on",c.getAttribute("data-part")===id));
       nav.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-part")===id));
       try{localStorage.setItem("fakebook-part",id);}catch(e){}
@@ -1998,6 +2043,25 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
       const el=document.getElementById(h); if(el) el.scrollIntoView();
     }
     window.addEventListener("hashchange",fromHash);
+    // side menu
+    const sm=document.getElementById("sidemenu"), mb=document.getElementById("menubtn"), smParts=document.getElementById("sm-parts"), smTunes=document.getElementById("sm-tunes");
+    function smRender(id){
+      if(!smParts) return;
+      smParts.innerHTML=PARTS.map(p=>'<button type="button" data-part="'+p.id+'"'+(p.id===id?' class="on"':'')+'>'+esc(p.name)+'</button>').join("");
+      const part=PARTS.find(p=>p.id===id)||PARTS[0];
+      smTunes.innerHTML=TUNES.map(t=>'<li><a href="#'+(part.id==="piano"?"":part.id+"-")+t.id+'">'+esc(t.title)+(part.layout==="drums"?'':'<span class="k">'+esc(part.tr?trProse(t.key,part.tr):t.key)+'</span>')+'</a></li>').join("");
+    }
+    function smOpen(o){ if(!sm) return; sm.classList.toggle("open",o); if(mb) mb.setAttribute("aria-expanded",o?"true":"false"); }
+    if(mb){ mb.addEventListener("click",()=>smOpen(!sm.classList.contains("open"))); }
+    const smc=document.getElementById("sm-close"); if(smc) smc.addEventListener("click",()=>smOpen(false));
+    if(sm){
+      sm.addEventListener("click",e=>{const b=e.target.closest("button[data-part]"); if(b){show(b.getAttribute("data-part"),false); smRender(b.getAttribute("data-part")); return;} if(e.target.closest("a")) smOpen(false);});
+      document.addEventListener("keydown",e=>{if(e.key==="Escape") smOpen(false);});
+    }
+    const _show=show; show=function(id,scroll){_show(id,scroll); smRender(id);};
+    // back to top
+    const tt=document.getElementById("totop");
+    if(tt){ tt.addEventListener("click",()=>{window.scrollTo(0,0);}); window.addEventListener("scroll",()=>tt.classList.toggle("show",(window.scrollY||0)>600),{passive:true}); }
     let start="piano"; try{start=localStorage.getItem("fakebook-part")||"piano";}catch(e){}
     if(!PARTS.some(p=>p.id===start)) start="piano";
     show(start,false); fromHash();
@@ -2012,7 +2076,14 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
       +lineHTML(l3,[l1[3],l3[0],l3[1],l3[2]],{ending:"2.",final:true});
   })();
   (function(){const li=document.querySelector('li[data-tune]');if(!li)return;const ul=li.parentElement,m={};ul.querySelectorAll('li[data-tune]').forEach(x=>m[x.dataset.tune]=x);TUNES.forEach(t=>{if(m[t.id])ul.appendChild(m[t.id])});})();
-  document.getElementById("setlist-body").innerHTML=TUNES.map(t=>'<tr><td class="n">'+t.num+'</td><td class="t"><a href="#'+t.id+'">'+esc(t.title)+'</a></td><td class="k">'+esc(t.key)+'</td><td>'+esc(t.form)+'</td><td>'+esc(t.feel)+' · '+esc(t.bpm)+'</td><td>'+(t.from?'<span class="pl">'+esc(t.from)+'</span>':'<span style="color:var(--muted)">standard pick</span>')+'</td></tr>').join("");
+  (function(){
+    const idFor=(p,t)=>(p.id==="piano"?"":p.id+"-")+t.id;
+    document.getElementById("setlist-body").innerHTML=TUNES.map(t=>'<tr><td class="n">'+t.num+'</td><td class="t"><a href="#'+t.id+'">'+esc(t.title)+'</a></td><td class="k">'+esc(t.key)+'</td><td style="white-space:nowrap">'+esc(t.form)+'</td>'
+      +PARTS.map(p=>{const lab=p.layout==="drums"?"·":esc(p.tr?trProse(t.key,p.tr):t.key); return '<td class="p"><a href="#'+idFor(p,t)+'" title="'+esc(t.title)+' · '+esc(p.label)+'"><span class="scr">'+lab+'</span><span class="pg" data-toc="'+idFor(p,t)+'"></span></a></td>';}).join("")+'</tr>').join("");
+    const fm=[["basics-h","Bandstand basics"],["pent-h","Pentatonics"],["glossary","Glossary"],["nochart-h","Still needed"],["appx","Appendix"]];
+    document.getElementById("toc-parts").innerHTML=PARTS.map((p,i)=>'<span><b>Part '+(i+1)+' · '+esc(p.label)+'</b><span class="pg" data-toc="part-'+p.id+'"></span> <a href="#part-'+p.id+'" class="scr" style="color:var(--muted)">open</a></span>').join("")
+      +fm.map(([id,l])=>'<span><b>'+l+'</b><span class="pg" data-toc="'+id+'"></span> <a href="#'+id+'" class="scr" style="color:var(--muted)">open</a></span>').join("");
+  })();
 
 })();
 </script>
