@@ -284,8 +284,32 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 .yt .ytc{display:grid;gap:3px;font-size:13px;color:var(--ink-2)}
 .yt .ytc b{font-size:15px;color:var(--ink)}
 .yt .ytc a{color:var(--muted);font-size:12px}
+@media (max-width:720px){.lean.big ul.two{grid-template-columns:1fr}.stand .kn .it .ch{font-size:24px}.stand .kn .it b{font-size:16px}.lean.big li .nn{font-size:18px}}
 @media (max-width:720px){.yt{grid-template-columns:1fr}.yt .ytb,.yt iframe{width:100%;height:auto;aspect-ratio:16/9}}
 @media print{.yt{display:none}}
+/* stand-readable block at the top of the notes page */
+.stand{margin-top:10px;padding:14px 16px 16px;background:var(--chart-bg);border:1px solid var(--rule);display:grid;gap:18px}
+.stand .kn{margin-top:0}
+.stand .kn .row{grid-template-columns:34px minmax(0,1fr);gap:14px;margin-bottom:12px}
+.stand .kn .schip{width:32px;height:32px;font-size:16px}
+.stand .kn .items{gap:10px 26px}
+.stand .kn .it{gap:10px}
+.stand .kn .it .ch{font-size:30px}
+.stand .kn .it b{font-size:19px;padding:2px 9px;letter-spacing:.04em}
+.lean.big{margin-top:0;grid-template-columns:1fr}
+.lean.big ul{gap:8px}
+.lean.big li{grid-template-columns:minmax(9em,auto) 1fr;gap:16px}
+.lean.big li .lb{font-size:15px}
+.lean.big li .nn{font-family:var(--font-chord);font-weight:700;font-size:22px;letter-spacing:.08em;color:var(--ink)}
+.lean.big li .ch{font-size:28px}
+.lean ul.two{grid-template-columns:1fr 1fr;gap:5px 28px}
+.lean.big ul.two{grid-template-columns:1fr 1fr;gap:8px 28px}
+.keys.big{margin-top:0}
+.keys.big .kb{width:190px}
+.keys.big .kb svg{width:190px;height:87px}
+.keys.big .kbt{font-size:14px}
+.keys.big .kbn{font-family:var(--font-chord);font-weight:700;font-size:17px;letter-spacing:.06em;color:var(--ink)}
+.stand h3{margin-bottom:10px}
 /* drum slashes */
 .bar.slash{justify-items:start}
 .slashes{font-family:var(--font-chord);font-weight:400;font-size:.85em;letter-spacing:.3em;color:var(--ink-2);padding-left:2px}
@@ -306,7 +330,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
       <span><b>Brackets</b> small chords in brackets are common options and turnarounds</span>
       <span><b>Solo map</b> what to lean on, per section</span>
       <span><a href="#glossary" style="color:var(--ink-2)">Glossary of symbols and terms</a></span>
-      <span><a href="https://shkenderov.github.io/Stefan-s-AI-jazz-book/Stefans-AABA-Fake-Book.pdf" target="_blank" rel="noopener" style="color:var(--ink);font-weight:600">⬇ Download the PDF · all seven parts, 448 pages</a></span>
+      <span><a href="https://shkenderov.github.io/Stefan-s-AI-jazz-book/Stefans-AABA-Fake-Book.pdf" target="_blank" rel="noopener" style="color:var(--ink);font-weight:600">⬇ Download the PDF · all seven parts, 495 pages</a></span>
     </div>
   </header>
 
@@ -1669,10 +1693,12 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
     (t.intro?[t.intro]:[]).concat(t.sections).forEach(s=>s.bars.forEach(b=>{b.replace(/[()]/g," ").split(/\s+/).filter(Boolean).forEach(c=>{if(!seen.has(c)){seen.add(c); out.push(c);}});}));
     return out;
   }
-  function keysHTML(t){
-    const chords=chordsIn(t).map(chordKB).join(""), pents=(PENTS[t.id]||[]).map(scaleKB).join("");
-    return '<div class="keys"><div><h3>Every chord in the chart <span>· coloured keys are the chord tones, the dot is the root</span></h3><div class="keyrow">'+chords+'</div></div>'
-      +(pents?'<div><h3>Pentatonics to lean on <span>· one octave, root dotted</span></h3><div class="keyrow">'+pents+'</div></div>':'')+'</div>';
+  function pentKeysHTML(t){
+    const pents=(PENTS[t.id]||[]).map(scaleKB).join("");
+    return pents?'<div class="keys big"><div><h3>Pentatonics to lean on <span>· one octave, root dotted</span></h3><div class="keyrow">'+pents+'</div></div></div>':'';
+  }
+  function chordKeysHTML(t){
+    return '<div class="keys"><div><h3>Every chord in the chart <span>· coloured keys are the chord tones, the dot is the root</span></h3><div class="keyrow">'+chordsIn(t).map(chordKB).join("")+'</div></div></div>';
   }
 
   // ---------- chord symbol rendering (lead-sheet conventions) ----------
@@ -1837,12 +1863,14 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
   function scaleList(t,tr){
     return (PENTS[t.id]||[]).map(p=>{const n=scaleNotesFor(p,tr); if(!n) return ""; return '<li><span class="lb">'+esc(trLabel(p.l,tr))+'</span><span class="nn">'+n.map(x=>x.name).join(" ")+'</span></li>';}).join("");
   }
-  function leanHTML(t,part){
-    const tr=part.tr, wp=tr?', written pitch':'';
-    const sc=scaleList(t,tr);
+  function scalesHTML(t,tr,big){
+    const sc=scaleList(t,tr), wp=tr?', written pitch':'';
+    return sc?'<div class="lean'+(big?' big':'')+'"><div><h3>Scales to lean on <span>· one octave from the root'+wp+'</span></h3><ul>'+sc+'</ul></div></div>':'';
+  }
+  function chordTonesHTML(t,tr,big){
+    const wp=tr?', written pitch':'';
     const ct=chordsIn(t).map(c=>{const tc=trTok(c,tr), n=chordNotes(tc); return '<li>'+chordHTML(tc)+'<span class="nn">'+(n?n.map(x=>x.name).join(" "):"")+'</span></li>';}).join("");
-    return '<div class="lean">'+(sc?'<div><h3>Scales to lean on <span>· one octave from the root'+wp+'</span></h3><ul>'+sc+'</ul></div>':'')
-      +'<div><h3>Chord tones <span>· every chord in the chart'+wp+'</span></h3><ul>'+ct+'</ul></div></div>';
+    return '<div class="lean'+(big?' big':'')+'"><div><h3>Chord tones <span>· root, 3rd, 5th, 7th of every chord'+wp+'</span></h3><ul class="two">'+ct+'</ul></div></div>';
   }
   // guitar: Freddie Green shells, root on the 6th or 5th string
   const OPEN=[4,9,2,7,11,4];
@@ -1866,9 +1894,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
   }
   function chordGrid(tok){const n=chordNotes(tok); return '<div class="gg">'+gridSVG(tok)+'<div class="kbl">'+chordHTML(tok)+'</div><div class="kbn">'+(n?n.map(x=>x.name).join(" "):"")+'</div></div>';}
   function gridsHTML(t){
-    const chords=chordsIn(t).map(chordGrid).join(""), sc=scaleList(t,null);
-    return '<div class="keys"><div><h3>Every chord in the chart <span>· Freddie Green voicings on the low strings; the dark dot is the root</span></h3><div class="keyrow">'+chords+'</div></div>'
-      +(sc?'<div class="lean" style="margin-top:0"><div><h3>Scales to lean on <span>· one octave from the root</span></h3><ul>'+sc+'</ul></div></div>':'')+'</div>';
+    return '<div class="keys"><div><h3>Every chord in the chart <span>· Freddie Green voicings on the low strings; the dark dot is the root</span></h3><div class="keyrow">'+chordsIn(t).map(chordGrid).join("")+'</div></div></div>';
   }
   function formGlance(t){
     const parts=[]; if(t.intro) parts.push('Intro '+(t.intro.bars.length*t.intro.times)+' bars ('+t.intro.bars.length+'-bar vamp ×'+t.intro.times+')');
@@ -1920,16 +1946,19 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
     if(part.layout==="drums"){
       h+='<p class="why">'+esc(formGlance(t))+'</p>'+howHTML(t,part);
     } else {
-      h+='<div class="notes-title" style="font-family:var(--font-body);font-weight:700;font-size:16px;margin-bottom:6px">'+esc(t.title)+' <span style="color:var(--muted);font-weight:500">· '+esc(part.label)+'</span></div>'
-        +howHTML(t,part);
-      if(fam==="horn"||fam==="guitar"||fam==="piano") h+=keyNotesHTML(t,tr);
+      h+='<div class="notes-title" style="font-family:var(--font-body);font-weight:700;font-size:16px;margin-bottom:6px">'+esc(t.title)+' <span style="color:var(--muted);font-weight:500">· '+esc(part.label)+'</span></div>';
+      // stand-readable first: key notes and scales in large type
+      if(fam==="horn"||fam==="guitar"||fam==="piano") h+='<div class="stand">'+keyNotesHTML(t,tr)+(fam==="piano"?pentKeysHTML(t):scalesHTML(t,tr,true))+'</div>';
+      else h+='<div class="stand">'+chordTonesHTML(t,tr,true)+'</div>';
+      h+=howHTML(t,part);
       const solo=(fam==="bass")?'':'<div><h3>Solo map · what to lean on</h3><div class="solo">'
         +t.solo.map(x=>'<div class="srow"><span class="schip">'+x.s+'</span><div><div class="center">'+P(x.c)+'</div><p>'+P(x.t)+'</p></div></div>').join("")+'</div></div>';
       const vars=t.var?'<div class="band"><h3>Variants you\'ll meet</h3><p class="var" style="border-top:0;padding-top:0;margin-top:0">'+P(t.var)+'</p></div>':'';
       if(solo||vars) h+='<div class="below"'+(solo?'':' style="grid-template-columns:1fr"')+'>'+solo+vars+'</div>';
-      if(part.layout==="piano") h+=keysHTML(t);
+      if(part.layout==="piano") h+=chordKeysHTML(t);
       else if(part.layout==="guitar") h+=gridsHTML(t);
-      else h+=leanHTML(t,part);
+      else if(fam==="bass") h+=scalesHTML(t,tr,false);
+      else h+=chordTonesHTML(t,tr,false);
     }
     h+='</article>'; CUR_TR=null; CUR_PART=null; return h;
   }
