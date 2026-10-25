@@ -234,7 +234,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
   .opt{font-size:.5em}
 }
 /* parts / chapters */
-.chapnav{position:sticky;top:0;z-index:5;background:var(--paper);display:flex;flex-wrap:wrap;gap:6px;padding:12px 0;border-bottom:1px solid var(--rule);margin-top:8px}
+.chapnav{position:sticky;top:0;z-index:5;background:var(--paper);display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 0;border-bottom:1px solid var(--rule)}
 .chapnav button{font:600 13px/1 var(--font-body);padding:9px 14px;border:1.4px solid var(--rule);background:var(--chart-bg);color:var(--ink-2);border-radius:999px;cursor:pointer}
 .chapnav button.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .chapnav .lbl{align-self:center;margin-right:6px}
@@ -297,7 +297,8 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 .toc-note{font-size:12.5px;color:var(--muted);margin-top:8px}
 @media print{.toc .scr,.toc-note .scr{display:none}.toc .pg,.toc-note .pg{display:inline}.toc td.p a{font-family:var(--font-body);font-weight:500;font-size:11.5px;color:var(--ink)}}
 /* side menu + back to top (screen only) */
-.menubtn{position:fixed;left:14px;top:12px;z-index:30;font:600 13px/1 var(--font-body);padding:9px 12px;border:1.4px solid var(--rule);background:var(--chart-bg);color:var(--ink);border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menubtn{font:600 16px/1 var(--font-body);padding:8px 12px;border:1.4px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:999px;cursor:pointer;margin-right:4px}
+.tbl{overflow-x:auto;max-width:100%}
 .sidemenu{position:fixed;left:0;top:0;bottom:0;width:min(320px,88vw);z-index:40;background:var(--chart-bg);border-right:1px solid var(--rule);transform:translateX(-102%);transition:transform .2s ease;display:flex;flex-direction:column;box-shadow:0 0 24px rgba(0,0,0,.12)}
 .sidemenu.open{transform:none}
 .sm-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--rule);font-family:var(--font-display);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:14px}
@@ -317,8 +318,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 .sm-tunes .k{color:var(--muted);font-family:var(--font-chord);font-weight:700;font-size:12px;margin-left:6px}
 .totop{position:fixed;right:16px;bottom:18px;z-index:30;font:600 13px/1 var(--font-body);padding:11px 14px;border:1.4px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:999px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .totop.show{opacity:1;pointer-events:auto}
-.mast{padding-top:64px}
-@media print{.menubtn,.sidemenu,.totop{display:none !important}.mast{padding-top:6px}}
+@media print{.menubtn,.sidemenu,.totop,.chapnav{display:none !important}}
 /* stand-readable block at the top of the notes page */
 .stand{margin-top:10px;padding:14px 16px 16px;background:var(--chart-bg);border:1px solid var(--rule);display:grid;gap:18px}
 .stand .kn{margin-top:0}
@@ -347,10 +347,44 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 .slashes{font-family:var(--font-chord);font-weight:400;font-size:.85em;letter-spacing:.3em;color:var(--ink-2);padding-left:2px}
 .part-drums .arr{margin-top:18px}
 @media print{.chapnav{display:none}.chapter{display:block !important}.notes-title{display:block}}
+@media (max-width:600px){
+  body{font-size:16px}
+  .chapnav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:10px 16px}
+  .chapnav::-webkit-scrollbar{display:none}
+  .chapnav .lbl{display:none}
+  .chapnav button{flex:0 0 auto}
+  .mast{padding-block:22px 18px}
+  .mast .sub{font-size:15px}
+  .line{flex-wrap:wrap;row-gap:4px;padding-top:24px}
+  .bar{flex:1 1 50%;max-width:50%;font-size:34px;min-height:72px;padding:8px 4px 8px 10px}
+  .bar.ts{padding-left:40px}
+  .line.rptstart .bar.ts{padding-left:48px}
+  .bar.three{font-size:.74em}
+  .pad{display:none}
+  .times{right:10px !important}
+  .sheet{padding:12px 8px 14px}
+  .sheet-top h2{font-size:20px}
+  .why,.how ul,.srow p,.band ul,.chart-note,.band .var{font-size:15px}
+  .how ul{padding-left:1em}
+  .stand{padding:12px 12px 14px}
+  .stand .kn .row{grid-template-columns:30px minmax(0,1fr);gap:10px}
+  .stand .kn .items{gap:8px 16px}
+  .stand .kn .it .ch{font-size:26px}
+  .stand .kn .it b{font-size:17px}
+  .lean.big li{grid-template-columns:1fr;gap:2px}
+  .lean.big li .nn{font-size:21px}
+  .lean ul.two{grid-template-columns:1fr}
+  .keys.big .kb{width:150px}
+  .keys.big .kb svg{width:150px;height:69px}
+  .keyrow{gap:12px 10px}
+  .metaline{gap:4px 16px}
+  .toc,.chapter-title table{font-size:12.5px}
+  .sidemenu{width:88vw}
+  .totop{right:12px;bottom:14px}
+}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 
-<button type="button" class="menubtn" id="menubtn" aria-label="Open the contents menu" aria-expanded="false">☰ <span>Menu</span></button>
 <aside class="sidemenu" id="sidemenu" aria-label="Contents menu">
   <div class="sm-head"><span>Contents</span><button type="button" class="sm-close" id="sm-close" aria-label="Close">×</button></div>
   <nav class="sm-nav">
@@ -364,6 +398,7 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
 </head>
 <body>
 <div class="wrap">
+  <nav class="chapnav" id="chapnav" aria-label="Parts"></nav>
   <header class="mast">
     <div class="eyebrow">Thirty-two swing standards · seven parts · lead-sheet changes</div>
     <h1>Stefan's AABA Fake Book</h1>
@@ -580,7 +615,6 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
     </div>
   </section>
 
-  <nav class="chapnav" id="chapnav" aria-label="Parts"></nav>
   <div id="tunes"></div>
 
   <section class="nochart" aria-labelledby="nochart-h">
@@ -2019,6 +2053,8 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
       +TUNES.map(t=>tuneHTML(t,part)).join("")+'</section>';
   }
   document.getElementById("tunes").innerHTML=PARTS.map(chapterHTML).join("");
+  // every table scrolls inside its own box on narrow screens
+  if(document.querySelectorAll) document.querySelectorAll("table").forEach(tb=>{ if(tb.parentElement&&tb.parentElement.classList&&!tb.parentElement.classList.contains("tbl")&&tb.parentElement.tagName!=="TD"){const w=document.createElement("div"); w.className="tbl"; tb.parentElement.insertBefore(w,tb); w.appendChild(tb);} });
   // listen: swap the thumbnail for the player on click
   if(document.addEventListener) document.addEventListener("click",e=>{
     const b=e.target.closest?e.target.closest(".ytb"):null; if(!b) return;
@@ -2029,14 +2065,14 @@ td.k{font-family:var(--font-chord);font-weight:700;white-space:nowrap;font-size:
   // part navigation (screen only; print shows every part)
   (function(){
     const nav=document.getElementById("chapnav"); if(!nav||!nav.addEventListener) return;
-    nav.innerHTML='<span class="eyebrow lbl">Part</span>'+PARTS.map(p=>'<button type="button" data-part="'+p.id+'">'+esc(p.name)+'</button>').join("");
+    nav.innerHTML='<button type="button" class="menubtn" id="menubtn" aria-label="Open the contents menu" aria-expanded="false">☰</button><span class="eyebrow lbl">Part</span>'+PARTS.map(p=>'<button type="button" data-part="'+p.id+'">'+esc(p.name)+'</button>').join("");
     let show=function(id,scroll){
       document.querySelectorAll(".chapter").forEach(c=>c.classList.toggle("on",c.getAttribute("data-part")===id));
       nav.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-part")===id));
       try{localStorage.setItem("fakebook-part",id);}catch(e){}
       if(scroll){const el=document.getElementById("part-"+id); if(el) el.scrollIntoView();}
     }
-    nav.addEventListener("click",e=>{const b=e.target.closest("button"); if(b) show(b.getAttribute("data-part"),true);});
+    nav.addEventListener("click",e=>{const b=e.target.closest("button[data-part]"); if(b) show(b.getAttribute("data-part"),true);});
     function fromHash(){
       const h=(location.hash||"").replace("#",""); if(!h) return;
       const p=PARTS.find(x=>h===("part-"+x.id)||h.indexOf(x.id+"-")===0); show(p?p.id:"piano",false);
